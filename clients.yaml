@@ -1,0 +1,93 @@
+openapi: 3.0.3
+info: 
+  title: Рога и Копыта OpenAPI спецификация
+  version: 0.0.1
+servers:
+  - url: https://rogaikopyta.ru/api/v1/
+paths:
+  /clients:
+    get:
+      summary: Метод получения списка клиентов
+      tags:
+        - Clients
+      operationId: getALLClients
+      responses: 
+        '200': 
+          description: Успешный ответ со списком клиентов
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Clients"
+        'default':
+          description: Ошибки
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+  /clients/{client_id}:
+    get:
+      summary: Метод получения клиента по идентификатору
+      tags:
+        - Clients
+      operationId: getClientById
+      parameters: 
+        - name: client_id
+          in: path
+          required: true
+          description: Идентификатор клиента
+          schema:
+            type: string
+          example: bc9ff0b0-3d85-4191-9fde-b99bfe04d145
+      responses: 
+        '200': 
+          description: Успешный ответ с одним клиентом
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Client"
+        'default':
+          description: Ошибки
+          content:
+            application/json:
+              schema:
+                $ref: "#/components/schemas/Error"
+components:
+  schemas:
+    Client:
+      type: object
+      required:
+        - name
+        - phone_number
+        - email
+        - shopping_list
+      properties:
+        client_id:
+          type: string
+          example: bc9ff0b0-3d85-4191-9fde-b99bfe04d145
+        name:
+          type: string
+          example: Иванов Аркадий Яковлевич
+        phone_number:
+          type: number
+          example: 79999999999
+        email:
+          type: string
+          example: ivanov-arkadiy@gmail.com
+        shopping_list:
+          type: array
+          items: 
+            type: string
+    Clients:
+      type: array
+      items: 
+        $ref: "#/components/schemas/Client"
+    Error:
+      type: object
+      required:
+        - code
+        - message
+      properties:
+        code:
+          type: integer
+        message:
+          type: string
